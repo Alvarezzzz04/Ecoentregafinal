@@ -16,7 +16,7 @@ class ProductsTable
         return $table
             ->defaultSort('publication_date', 'desc')
             ->columns([
-                ImageColumn::make('image')->label('Imagen')->disk('public'),
+                ImageColumn::make('image_url')->label('Imagen'),
                 TextColumn::make('product_name')->label('Producto')->searchable()->sortable(),
                 TextColumn::make('category.category_name')->label('Categoría')->searchable()->sortable(),
                 TextColumn::make('user.name')->label('Vendedor')->searchable()->sortable(),

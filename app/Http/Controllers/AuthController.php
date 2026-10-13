@@ -102,7 +102,12 @@ class AuthController extends Controller
         $cartProducts = $user->shoppingCart?->cartDetails()->sum('quantity') ?? 0;
         $orders = $user->orders()->with(['details.product', 'payment'])->latest('order_date')->take(10)->get();
         $client = $user->client;
-        $featuredProducts = Product::query()->with('category')->latest('publication_date')->take(4)->get();
+        $featuredProducts = Product::query()
+            ->with('category')
+            ->where('stock', '>', 0)
+            ->latest('publication_date')
+            ->take(4)
+            ->get();
 
         return view('account', compact('user', 'cartProducts', 'orders', 'client', 'featuredProducts'));
     }
@@ -281,6 +286,12 @@ class AuthController extends Controller
                     'subtotal' => $total,
                     'model' => $product,
                 ]];
+
+                // Eliminar el producto del carrito si el usuario lo acaba de comprar de forma individual
+                $cart = $user->shoppingCart;
+                if ($cart) {
+                    $cart->cartDetails()->where('id_product', $product->id_product)->delete();
+                }
             } else {
                 $cart = $user->shoppingCart()->with('cartDetails.product')->first();
                 if (! $cart || $cart->cartDetails->isEmpty()) {

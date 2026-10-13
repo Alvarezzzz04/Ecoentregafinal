@@ -291,7 +291,7 @@
                         <div class="cart-item">
                             <div class="item-thumb">
                                 @if($detail->product->image)
-                                    <img src="{{ asset('storage/' . ltrim($detail->product->image, '/')) }}" alt="{{ $detail->product->product_name }}" onerror="this.parentElement.innerHTML='👚'">
+                                    <img src="{{ $detail->product->image_url }}" alt="{{ $detail->product->product_name }}" onerror="this.parentElement.innerHTML='👚'">
                                 @else
                                     👚
                                 @endif

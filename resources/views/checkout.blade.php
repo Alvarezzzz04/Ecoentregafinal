@@ -331,7 +331,7 @@
                             <div class="item-row">
                                 <div class="item-thumb">
                                     @if($item['product']->image)
-                                        <img src="{{ asset('storage/' . ltrim($item['product']->image, '/')) }}" alt="{{ $item['product']->product_name }}" onerror="this.parentElement.innerHTML='👚'">
+                                        <img src="{{ $item['product']->image_url }}" alt="{{ $item['product']->product_name }}" onerror="this.parentElement.innerHTML='👚'">
                                     @else
                                         👚
                                     @endif

@@ -8,6 +8,7 @@ use App\Models\Product;
 Route::get('/', function () {
     $products = Product::query()
         ->with(['category', 'user'])
+        ->where('stock', '>', 0)
         ->when(request('search'), function ($query, $search) {
             $query->where(function ($query) use ($search) {
                 $query->where('product_name', 'like', "%{$search}%")

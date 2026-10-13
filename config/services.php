@@ -2,6 +2,10 @@
 
 return [
 
+    'donations' => [
+        'whatsapp' => env('DONATION_WHATSAPP'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Third Party Services

@@ -650,6 +650,20 @@
             line-height: 1.6;
         }
 
+        .donation-section { padding: 0 32px 64px; }
+        .donation-card {
+            max-width: 1216px; margin: 0 auto; padding: 36px 40px;
+            display: flex; align-items: center; justify-content: space-between; gap: 24px;
+            border-radius: 20px; background: #ecfdf5; border: 1px solid #bbf7d0;
+        }
+        .donation-card h2 { margin: 8px 0; color: #064e3b; font-size: 28px; }
+        .donation-card p { margin: 0; color: #57534e; line-height: 1.6; }
+        .donation-contact {
+            display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+            padding: 14px 20px; border-radius: 10px; background: #047857; color: #fff; font-weight: 700;
+        }
+        .donation-contact:hover { background: #065f46; }
+
         /* Footer */
         footer {
             padding: 30px;
@@ -714,6 +728,9 @@
             .how-inner {
                 padding: 50px 20px;
             }
+
+            .donation-section { padding: 0 20px 50px; }
+            .donation-card { align-items: flex-start; flex-direction: column; padding: 28px 24px; }
 
             .steps-grid {
                 grid-template-columns: 1fr;
@@ -880,6 +897,26 @@
     </section>
 
 
+    {{-- DONACIONES --}}
+    <section class="donation-section" aria-labelledby="donation-title">
+        <div class="donation-card">
+            <div>
+                <p class="eyebrow">Dale otra vida a tu ropa</p>
+                <h2 id="donation-title">¿Quieres donar ropa?</h2>
+                <p>Nos encantaría recibir prendas en buen estado. Escríbenos para coordinar tu donación.</p>
+            </div>
+
+            @if (config('services.donations.whatsapp'))
+                @php $donationPhone = preg_replace('/\D+/', '', config('services.donations.whatsapp')); @endphp
+                <a class="donation-contact" href="https://wa.me/{{ $donationPhone }}" target="_blank" rel="noopener noreferrer">
+                    Contactar por WhatsApp
+                </a>
+            @else
+                <p>Pronto publicaremos aquí nuestro número de contacto.</p>
+            @endif
+        </div>
+    </section>
+
     {{-- CATÁLOGO --}}
     <section id="catalogo" class="catalog">
 
@@ -982,7 +1019,7 @@
                             @if ($product->image)
 
                                 <img
-                                    src="{{ asset('storage/' . ltrim($product->image, '/')) }}"
+                                    src="{{ $product->image_url }}"
                                     alt="{{ $product->product_name }}"
                                     loading="lazy"
                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';"

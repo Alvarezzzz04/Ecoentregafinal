@@ -52,4 +52,15 @@ class Product extends Model
     {
         return $this->hasMany(OrderDetail::class, 'id_product');
     }
+
+    public function getImageUrlAttribute()
+    {
+        if (empty($this->image)) {
+            return null;
+        }
+        if (str_starts_with($this->image, 'http')) {
+            return $this->image;
+        }
+        return asset('storage/' . ltrim($this->image, '/'));
+    }
 }

@@ -368,7 +368,7 @@
                 <article class="product">
                     <div class="photo">
                         @if($product->image)
-                            <img src="{{ asset('storage/' . ltrim($product->image, '/')) }}" alt="{{ $product->product_name }}" onerror="this.parentElement.innerHTML='👕'">
+                            <img src="{{ $product->image_url }}" alt="{{ $product->product_name }}" onerror="this.parentElement.innerHTML='👕'">
                         @else
                             👕
                         @endif

@@ -7,7 +7,9 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use App\Models\User;
 
 class ProductForm
 {
@@ -37,7 +39,26 @@ class ProductForm
                     ->required(),
                 Select::make('size')
                     ->label('Talla')
-                    ->options(['XS' => 'XS', 'S' => 'S', 'M' => 'M', 'L' => 'L', 'XL' => 'XL', 'Única' => 'Única'])
+                    ->options(function (Get $get): array {
+                        $categoryName = \App\Models\Category::query()
+                            ->whereKey($get('id_category'))
+                            ->value('category_name');
+
+                        if ($categoryName === 'Zapatos') {
+                            return array_combine(range(35, 45), range(35, 45));
+                        }
+
+                        if ($categoryName === 'Pantalones') {
+                            $sizes = range(28, 44, 2);
+                            return array_combine($sizes, $sizes);
+                        }
+
+                        if ($categoryName === 'Accesorios') {
+                            return ['Única' => 'Única'];
+                        }
+
+                        return ['XS' => 'XS', 'S' => 'S', 'M' => 'M', 'L' => 'L', 'XL' => 'XL'];
+                    })
                     ->required(),
                 Select::make('garment_condition')
                     ->label('Estado de la prenda')
@@ -50,15 +71,22 @@ class ProductForm
                 Select::make('id_category')
                     ->label('Categoría')
                     ->relationship('category', 'category_name')
+                    ->live()
                     ->searchable()
                     ->preload()
                     ->required(),
                 Select::make('id_user')
                     ->label('Vendedor')
-                    ->relationship('user', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->default(fn () => auth()->id())
+                    ->options(fn (): array => User::query()
+                        ->where('email', 'admin@ecoentrega.com')
+                        ->pluck('name', 'id')
+                        ->all())
+                    ->default(fn () => User::query()->where('email', 'admin@ecoentrega.com')->value('id'))
+                    ->afterStateHydrated(fn (Select $component) => $component->state(
+                        User::query()->where('email', 'admin@ecoentrega.com')->value('id')
+                    ))
+                    ->disabled()
+                    ->dehydrated()
                     ->required(),
                 FileUpload::make('image')
                     ->label('Imagen de la prenda')
